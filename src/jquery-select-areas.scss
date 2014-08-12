@@ -1,0 +1,10 @@
+.select-areas {
+  position: absolute;
+  z-index: 10000;
+
+  .selection-box {
+    position: absolute;
+    background: transparent;
+    border: 1px dotted #000;
+  }
+}
