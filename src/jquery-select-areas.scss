@@ -1,10 +1,18 @@
+img {
+  margin-top: 400px;
+  margin-left: 100px;
+}
 .select-areas {
   position: absolute;
   z-index: 10000;
 
-  .selection-box {
+  .area-create, .area {
     position: absolute;
     background: transparent;
     border: 1px dotted #000;
+  }
+  .area-draggable:hover {
+    border-color: red;
+    cursor: move;
   }
 }
