@@ -6,14 +6,12 @@ img {
   position: absolute;
   z-index: 10000;
 
-  .area-create {
+  .area-create, .area {
     position: absolute;
     background: transparent;
     border: 1px dotted #000;
   }
   .area {
-    @extend .area-create;
-
     .drag-handle {
       cursor: move;
       position: absolute;
