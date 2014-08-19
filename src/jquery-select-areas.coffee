@@ -168,7 +168,10 @@ class SelectAreas
     return @options.disabled
 
   getAreas: ->
-    return @area.map (area) -> area.getDimensions()
+    a = {}
+    for area in @areas
+      a[area.getID()] = area.getDimensions()
+    return a
 
 
 # export to global namespace
