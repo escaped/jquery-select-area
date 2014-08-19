@@ -41,7 +41,7 @@ $(document).ready(function() {
   var $elem = $('body img'),
       $events = $('#events');
 
-  s = new SelectAreas($elem);
+  s = $elem.selectAreas();
   $elem.on('area-created', function(ev, data){
     $events.prepend('area-created: ' + data.id + '<br>');
   });

@@ -168,6 +168,18 @@ class SelectAreas
   getAreas: ->
     return @area.map (area) -> area.getDimensions()
 
+
 # export to global namespace
 root = exports ? this
 root.SelectAreas = SelectAreas
+
+
+# export as jQuery plugin
+jQuery.fn.extend
+  selectAreas: (options) ->
+    $el = $(@)
+    data = $el.data('select-area')
+
+    if not data
+      $el.data 'select-area', (data = new SelectAreas(@, options))
+    return data
