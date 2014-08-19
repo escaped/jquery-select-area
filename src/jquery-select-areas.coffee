@@ -66,10 +66,10 @@ class Area
   getID: ->
     return @id
 
-  dimensions: ->
+  getDimensions: ->
     return getBoxCSS(@area)
 
-  draggable: ->
+  isDraggable: ->
     return @draggable
 
 
@@ -139,7 +139,7 @@ class SelectAreas
       return
 
     getAreas: ->
-      return @area.map (area) -> area.dimensions()
+      return @area.map (area) -> area.getDimensions()
 
 # export to global namespace
 root = exports ? this
