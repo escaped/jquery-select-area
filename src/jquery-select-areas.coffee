@@ -12,13 +12,19 @@ defaults = {
 
 class Area
   @amount: 0
-  constructor: (@parent, size, @draggable = true) ->
+  constructor: (@instance, size, @draggable = true) ->
     @id = Area.amount++
     @area = $('<div>').addClass('area').css(size)
-    @parent.append(@area)
+    @instance.container.append(@area)
+
     if draggable
       @._make_draggable()
+
+    @._trigger_event('created')
     return
+
+  _trigger_event: (type) ->
+    @instance.elem.trigger('area-' + type, {id: @id, size: getBoxCSS(@area)})
 
   _make_draggable: ->
     dragger = $('<div>')
@@ -39,11 +45,11 @@ class Area
           .on 'mousemove', (e) =>
             e.stopPropagation()
 
-            new_x = e.pageX - @parent.offset().left - offset_x
-            new_y = e.pageY - @parent.offset().top - offset_y
+            new_x = e.pageX - @instance.container.offset().left - offset_x
+            new_y = e.pageY - @instance.container.offset().top - offset_y
             # respect parent
-            if new_x + @area.width() >= @parent.width() - 1 or
-                new_y + @area.height() >= @parent.height() - 1 or
+            if new_x + @area.width() >= @instance.container.width() - 1 or
+                new_y + @area.height() >= @instance.container.height() - 1 or
                 new_x < 0 or new_y < 0
               return
 
@@ -53,10 +59,10 @@ class Area
             }
             return
 
-          .on 'mouseup', (e) =>
-            e.stopPropagation()
-            @area.off 'mousemove'
-            return
+      .on 'mouseup', (e) =>
+        e.stopPropagation()
+        @area.off 'mousemove'
+        @._trigger_event('moved')
         return
     @area
       .addClass('area-draggable')
@@ -130,7 +136,7 @@ class SelectAreas
 
         size = getBoxCSS(@selection)
         if size.width != 0 and size.height != 0
-          @areas.push new Area(@container, size, @options.draggable)
+          @areas.push new Area(@, size, @options.draggable)
 
         # cleanup
         @selection.remove()

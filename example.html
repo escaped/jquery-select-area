@@ -6,13 +6,34 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="dist/jquery-select-areas.js"></script>
     <link rel="stylesheet" href="dist/jquery-select-areas.css">
+
+    <style type="text/css">
+      #events {
+        float: left;
+        border: 1px solid #000;
+        margin-left: 50px;
+        padding: 10px;
+        height: 300px;
+        width: 200px;
+        overflow: scroll;
+      }
+    </style>
   </head>
   <body>
-    <img src="dummy.jpg">
+    <img src="dummy.jpg" style="float: left">
+    <div id="events"></div>
     <script type="text/javascript">
 $(document).ready(function() {
-  var $elem = $('body img');
+  var $elem = $('body img'),
+      $events = $('#events');
+
   s = SelectAreas($elem);
+  $elem.on('area-created', function(ev, data){
+    $events.prepend('area-created: ' + data.id + '<br>');
+  });
+  $elem.on('area-moved', function(ev, data){
+    $events.prepend('area-moved: ' + data.id + '<br>');
+  });
 });
     </script>
   </body>
