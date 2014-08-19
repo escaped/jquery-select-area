@@ -95,8 +95,6 @@ class SelectAreas
     # register mouse events
     @container
       .on 'mousedown', (e) =>
-        #click_y = e.pageY
-        #click_x = e.pageX
         # relative to container
         click_x = e.pageX - @container.offset().left
         click_y = e.pageY - @container.offset().top
