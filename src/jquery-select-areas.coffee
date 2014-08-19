@@ -11,7 +11,9 @@ defaults = {
 }
 
 class Area
+  @amount: 0
   constructor: (@parent, size, @draggable = true) ->
+    @id = Area.amount++
     @area = $('<div>').addClass('area').css(size)
     @parent.append(@area)
     if draggable
@@ -60,6 +62,9 @@ class Area
       .addClass('area-draggable')
       .append(dragger)
     return
+
+  getID: ->
+    return @id
 
   dimensions: ->
     return getBoxCSS(@area)
