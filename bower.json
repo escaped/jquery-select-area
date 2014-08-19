@@ -4,7 +4,10 @@
   "authors": [
     "Alexander frenzel <alex@relatedworks.com>"
   ],
-  "main": "jq-select-areas.js",
+  "main": [
+    "jquery-select-areas.js",
+    "jquery-select-areas.css"
+  ],
   "license": "BSD",
   "private": true,
   "ignore": [
