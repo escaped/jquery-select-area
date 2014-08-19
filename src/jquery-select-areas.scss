@@ -6,13 +6,24 @@ img {
   position: absolute;
   z-index: 10000;
 
-  .area-create, .area {
+  .area-create {
     position: absolute;
     background: transparent;
     border: 1px dotted #000;
   }
+  .area {
+    @extend .area-create;
+
+    .drag-handle {
+      cursor: move;
+      position: absolute;
+      top: 3%;
+      right: 3%;
+      bottom: 3%;
+      left: 3%;
+    }
+  }
   .area-draggable:hover {
-    border-color: red;
-    cursor: move;
+      border-color: red;
   }
 }

@@ -19,8 +19,8 @@ class Area
     return
 
   _make_draggable: ->
-    @area
-      .addClass('area-draggable')
+    dragger = $('<div>')
+      .addClass('drag-handle')
       .on 'mouseover', =>
         @area.addClass('over')
         return
@@ -56,6 +56,10 @@ class Area
             @area.off 'mousemove'
             return
         return
+    @area
+      .addClass('area-draggable')
+      .append(dragger)
+    return
 
   dimensions: ->
     return getBoxCSS(@area)
