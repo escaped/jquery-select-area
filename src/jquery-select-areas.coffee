@@ -39,6 +39,7 @@ class Area
 
       .on 'mousedown', (e) =>
         if @instance.isDisabled() then return
+        if event.which != 1 then return  # only left mouse btn
         e.stopPropagation()
 
         offset_x = e.pageX - @area.offset().left
@@ -103,6 +104,7 @@ class SelectAreas
     @container
       .on 'mousedown', (e) =>
         if @isDisabled() then return
+        if event.which != 1 then return  # only left mouse btn
 
         # relative to container
         click_x = e.pageX - @container.offset().left
