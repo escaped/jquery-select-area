@@ -8,6 +8,7 @@ getBoxCSS = (elem, absolute = false) ->
 
 defaults = {
   'draggable': true
+  'disabled': false
 }
 
 class Area
@@ -21,10 +22,10 @@ class Area
       @._make_draggable()
 
     @._trigger_event('created')
-    return
 
   _trigger_event: (type) ->
     @instance.elem.trigger('area-' + type, {id: @id, size: getBoxCSS(@area)})
+    return
 
   _make_draggable: ->
     dragger = $('<div>')
@@ -37,7 +38,9 @@ class Area
         return
 
       .on 'mousedown', (e) =>
+        if @instance.isDisabled() then return
         e.stopPropagation()
+
         offset_x = e.pageX - @area.offset().left
         offset_y = e.pageY - @area.offset().top
 
@@ -60,7 +63,9 @@ class Area
             return
 
       .on 'mouseup', (e) =>
+        if @instance.isDisabled() then return
         e.stopPropagation()
+
         @area.off 'mousemove'
         @._trigger_event('moved')
         return
@@ -89,12 +94,16 @@ class SelectAreas
     @container = $('<div>')
       .addClass('select-areas')
       .css getBoxCSS(@elem, true)
-
     $('body').append(@container)
+
+    if not @.isDisabled()
+      @.enable()  # enable all interaction
 
     # register mouse events
     @container
       .on 'mousedown', (e) =>
+        if @.isDisabled() then return
+
         # relative to container
         click_x = e.pageX - @container.offset().left
         click_y = e.pageY - @container.offset().top
@@ -128,6 +137,8 @@ class SelectAreas
         return
 
       .on 'mouseup', (e) =>
+        if @.isDisabled() then return
+
         @container.off 'mousemove'
         if not @selection
           return
@@ -140,10 +151,22 @@ class SelectAreas
         @selection.remove()
         @selection = null
         return
-      return
 
-    getAreas: ->
-      return @area.map (area) -> area.getDimensions()
+  disable: ->
+    @options.disabled = true
+    @container.removeClass('area-enabled')
+    return
+
+  enable: ->
+    @options.disabled = false
+    @container.addClass('area-enabled')
+    return
+
+  isDisabled: ->
+    return @options.disabled
+
+  getAreas: ->
+    return @area.map (area) -> area.getDimensions()
 
 # export to global namespace
 root = exports ? this

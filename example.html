@@ -8,12 +8,19 @@
     <link rel="stylesheet" href="dist/jquery-select-areas.css">
 
     <style type="text/css">
-      #events {
+      #options {
         float: left;
-        border: 1px solid #000;
+        margin-left: 20px;
+      }
+      #events-wrapper {
+        float: left;
         margin-left: 50px;
+      }
+      #events {
+        display: block;
+        border: 1px solid #000;
         padding: 10px;
-        height: 300px;
+        height: 200px;
         width: 200px;
         overflow: scroll;
       }
@@ -21,18 +28,32 @@
   </head>
   <body>
     <img src="dummy.jpg" style="float: left">
-    <div id="events"></div>
+    <div id="options">
+      <p>Options</p>
+      <input type="checkbox" id="disabled" name="disabled"> disabled
+    </div>
+    <div id="events-wrapper">
+      <p>Events:</p>
+      <p id="events"></p>
+    </div>
     <script type="text/javascript">
 $(document).ready(function() {
   var $elem = $('body img'),
       $events = $('#events');
 
-  s = SelectAreas($elem);
+  s = new SelectAreas($elem);
   $elem.on('area-created', function(ev, data){
     $events.prepend('area-created: ' + data.id + '<br>');
   });
   $elem.on('area-moved', function(ev, data){
     $events.prepend('area-moved: ' + data.id + '<br>');
+  });
+  $('#disabled').change(function() {
+    if ($(this).is(':checked')) {
+      s.disable();
+    } else {
+      s.enable();
+    }
   });
 });
     </script>

@@ -7,7 +7,7 @@
     background: transparent;
     border: 1px dotted #000;
   }
-  .area {
+  &.area-enabled {
     .drag-handle {
       cursor: move;
       position: absolute;
@@ -17,7 +17,7 @@
       left: 3%;
     }
   }
-  .area-draggable:hover {
+  &.area-enabled .area-draggable:hover {
       border-color: red;
   }
 }
