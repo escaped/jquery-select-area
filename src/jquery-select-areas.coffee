@@ -19,9 +19,9 @@ class Area
     @instance.container.append(@area)
 
     if draggable
-      @._make_draggable()
+      @_make_draggable()
 
-    @._trigger_event('created')
+    @_trigger_event('created')
 
   _trigger_event: (type) ->
     @instance.elem.trigger('area-' + type, {id: @id, size: getBoxCSS(@area)})
@@ -67,7 +67,7 @@ class Area
         e.stopPropagation()
 
         @area.off 'mousemove'
-        @._trigger_event('moved')
+        @_trigger_event('moved')
         return
     @area
       .addClass('area-draggable')
@@ -96,13 +96,13 @@ class SelectAreas
       .css getBoxCSS(@elem, true)
     $('body').append(@container)
 
-    if not @.isDisabled()
-      @.enable()  # enable all interaction
+    if not @isDisabled()
+      @enable()  # enable all interaction
 
     # register mouse events
     @container
       .on 'mousedown', (e) =>
-        if @.isDisabled() then return
+        if @isDisabled() then return
 
         # relative to container
         click_x = e.pageX - @container.offset().left
@@ -137,7 +137,7 @@ class SelectAreas
         return
 
       .on 'mouseup', (e) =>
-        if @.isDisabled() then return
+        if @isDisabled() then return
 
         @container.off 'mousemove'
         if not @selection
