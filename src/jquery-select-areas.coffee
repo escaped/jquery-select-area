@@ -18,7 +18,7 @@ class Area
     @id = Area.amount++
     @area = $('<div>').addClass('area').css(size)
     if label
-      @area.append($('<p>').addClass('name').text(@id))
+      @area.append($('<p>').addClass('name').addClass('no-select').text(@id))
     @instance.container.append(@area)
 
     if draggable
@@ -45,12 +45,13 @@ class Area
         if event.which != 1 then return  # only left mouse btn
         e.stopPropagation()
 
+        @area.css({'z-index': 1000})
         offset_x = e.pageX - @area.offset().left
         offset_y = e.pageY - @area.offset().top
 
         @area
           .on 'mousemove', (e) =>
-            e.stopPropagation()
+            e.preventDefault()
 
             new_x = e.pageX - @instance.container.offset().left - offset_x
             new_y = e.pageY - @instance.container.offset().top - offset_y
@@ -70,6 +71,7 @@ class Area
         if @instance.isDisabled() then return
         e.stopPropagation()
 
+        @area.css({'z-index': 10})
         @area.off 'mousemove'
         @_trigger_event('moved')
         return
@@ -128,6 +130,7 @@ class SelectAreas
           .appendTo @container
 
         @container.on 'mousemove', (e) =>
+          e.preventDefault()
           move_x = e.pageX - @container.offset().left
           move_y = e.pageY - @container.offset().top
           width  = Math.abs(move_x - click_x)
