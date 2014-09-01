@@ -31,7 +31,8 @@
     <div id="options">
       <p>Options</p>
       <input type="checkbox" id="disabled" name="disabled"> disable interaction<br>
-      <input type="checkbox" id="labels" name="labels" checked> show labels
+      <input type="checkbox" id="labels" name="labels" checked> show labels<br>
+      <input type="text" id="remove-id" name="remove-id" style="width: 40px"> <input type="submit" value="remove id" id="remove" name="remove">
     </div>
     <div id="events-wrapper">
       <p>Events:</p>
@@ -49,6 +50,9 @@ $(document).ready(function() {
   $elem.on('area-moved', function(ev, data){
     $events.prepend('area-moved: ' + data.id + '<br>');
   });
+  $elem.on('area-removed', function(ev, id){
+    $events.prepend('area-removed: ' + id + '<br>');
+  });
   $('#disabled').change(function() {
     if ($(this).is(':checked')) {
       s.disable();
@@ -58,6 +62,10 @@ $(document).ready(function() {
   });
   $('#labels').change(function() {
     s.showLabels($(this).is(':checked'));
+  });
+  $('#remove').click(function() {
+    var id = parseInt($('#remove-id').val(), 10);
+    s.removeArea(id);
   });
 });
     </script>

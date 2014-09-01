@@ -87,6 +87,8 @@ class Area
   isDraggable: ->
     return @draggable
 
+  destroy: ->
+    @area.remove()
 
 class SelectAreas
   constructor: (@elem, options = {}) ->
@@ -180,6 +182,13 @@ class SelectAreas
 
   isDisabled: ->
     return @options.disabled
+
+  removeArea: (id) ->
+    toBeRemoved = []
+    @areas = @areas.filter (e) -> e.getID() != id || !toBeRemoved.push e
+    for area in toBeRemoved
+      area.destroy()
+      @elem.trigger('area-removed', id)
 
   getAreas: ->
     a = {}
