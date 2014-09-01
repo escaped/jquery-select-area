@@ -1,6 +1,7 @@
 .select-areas {
   position: absolute;
   z-index: 10000;
+  .hide { display: none; }
 
   .area-create, .area {
     position: absolute;

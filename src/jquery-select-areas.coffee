@@ -9,7 +9,7 @@ getBoxCSS = (elem, absolute = false) ->
 defaults = {
   'draggable': true
   'disabled': false
-  'label': true
+  'labels': true
 }
 
 class Area
@@ -151,6 +151,7 @@ class SelectAreas
         size = getBoxCSS(@selection)
         if size.width != 0 and size.height != 0
           @areas.push new Area(@, size, @options.draggable, @options.label)
+          @__labelVisibility()
 
         # cleanup
         @selection.remove()
@@ -166,6 +167,16 @@ class SelectAreas
     @options.disabled = false
     @container.addClass('area-enabled')
     return
+
+  showLabels: (show)->
+    @options.labels = show
+    @__labelVisibility()
+
+  __labelVisibility: ->
+    if @options.labels
+      $('p.name', @container).removeClass('hide')
+    else
+      $('p.name', @container).addClass('hide')
 
   isDisabled: ->
     return @options.disabled

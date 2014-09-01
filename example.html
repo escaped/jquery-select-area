@@ -30,7 +30,8 @@
     <img src="dummy.jpg" style="float: left">
     <div id="options">
       <p>Options</p>
-      <input type="checkbox" id="disabled" name="disabled"> disabled
+      <input type="checkbox" id="disabled" name="disabled"> disable interaction<br>
+      <input type="checkbox" id="labels" name="labels" checked> show labels
     </div>
     <div id="events-wrapper">
       <p>Events:</p>
@@ -54,6 +55,9 @@ $(document).ready(function() {
     } else {
       s.enable();
     }
+  });
+  $('#labels').change(function() {
+    s.showLabels($(this).is(':checked'));
   });
 });
     </script>
