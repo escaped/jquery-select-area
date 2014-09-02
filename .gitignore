@@ -1,3 +1,4 @@
 node_modules
 bower_components
-dist
+dist/jquery-select-areas.js
+dist/jquery-select-areas.css

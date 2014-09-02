@@ -1,12 +1,12 @@
 {
   "name": "jquery-select-areas",
-  "version": "0.0.0",
+  "version": "0.1",
   "authors": [
     "Alexander frenzel <alex@relatedworks.com>"
   ],
   "main": [
-    "jquery-select-areas.js",
-    "jquery-select-areas.css"
+    "dist/jquery-select-areas.min.js",
+    "dist/jquery-select-areas.min.css"
   ],
   "license": "BSD",
   "private": true,
