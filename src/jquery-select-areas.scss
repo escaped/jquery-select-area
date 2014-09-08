@@ -1,3 +1,5 @@
+$handle-size: 10px;
+
 .select-areas {
   position: absolute;
   z-index: 10000;
@@ -38,16 +40,80 @@
     }
   }
   &.area-enabled {
+    .area-draggable:hover,
+    .area-resizable:hover {
+      border-color: red;
+    }
+    .area-resizeable:hover .resize-handle {
+      display: block;
+    }
     .drag-handle {
       cursor: move;
       position: absolute;
-      top: 5px;
-      right: 5px;
-      bottom: 5px;
-      left: 5px;
+      top: $handle-size;
+      right: $handle-size;
+      bottom: $handle-size;
+      left: $handle-size;
     }
-  }
-  &.area-enabled .area-draggable:hover {
-      border-color: red;
+    .resize-handle {
+      display: none;
+      position: absolute;
+      &.left {
+        cursor: w-resize;
+        top: $handle-size;
+        bottom: $handle-size;
+        left: -$handle-size;
+        width: 2 * $handle-size;
+      }
+      &.right {
+        cursor: e-resize;
+        top: $handle-size;
+        right: -$handle-size;
+        bottom: $handle-size;
+        width: 2 * $handle-size;
+      }
+      &.top {
+        cursor: n-resize;
+        top: -$handle-size;
+        right: $handle-size;
+        left: $handle-size;
+        height: 2 * $handle-size;
+      }
+      &.bottom {
+        cursor: s-resize;
+        bottom: -$handle-size;
+        right: $handle-size;
+        left: $handle-size;
+        height: 2 * $handle-size;
+      }
+      &.topleft {
+        cursor: nw-resize;
+        left: -$handle-size;
+        top: -$handle-size;
+        width: 2 * $handle-size;
+        height: 2 * $handle-size;
+      }
+      &.topright {
+        cursor: ne-resize;
+        top: -$handle-size;
+        right: -$handle-size;
+        width: 2 * $handle-size;
+        height: 2 * $handle-size
+      }
+      &.bottomleft {
+        cursor: sw-resize;
+        left: -$handle-size;
+        bottom: -$handle-size;
+        width: 2 * $handle-size;
+        height: 2 * $handle-size;
+      }
+      &.bottomright {
+        cursor: se-resize;
+        right: -$handle-size;
+        bottom: -$handle-size;
+        width: 2 * $handle-size;
+        height: 2 * $handle-size;
+      }
+    }
   }
 }

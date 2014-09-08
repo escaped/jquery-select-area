@@ -8,21 +8,27 @@ getBoxCSS = (elem, absolute = false) ->
 
 defaults = {
   'draggable': true
+  'resizeable': true
   'disabled': false
   'labels': true
+  'min_width': 40
+  'min_height': 40
 }
 
 class Area
   @amount: 0
-  constructor: (@instance, size, @draggable=true, label=true) ->
+  constructor: (@instance, size,
+                @draggable=true, @resizeable=true, label=true) ->
     @id = Area.amount++
     @area = $('<div>').addClass('area').css(size)
     if label
       @area.append($('<p>').addClass('name').addClass('no-select').text(@id))
     @instance.container.append(@area)
 
-    if draggable
+    if @draggable
       @_make_draggable()
+    if @resizeable
+      @_make_resizeable()
 
     @_trigger_event('created')
 
@@ -30,41 +36,45 @@ class Area
     @instance.elem.trigger('area-' + type, {id: @id, size: getBoxCSS(@area)})
     return
 
-  _make_draggable: ->
-    dragger = $('<div>')
-      .addClass('drag-handle')
-      .on 'mouseover', =>
-        @area.addClass('over')
-        return
-      .on 'mouseleave', =>
-        @area.removeClass('over')
-        return
-
-      .on 'mousedown', (e) =>
+  _get_handle: (classes, event, callback) ->
+    handle = $('<div>')
+      .addClass(classes)
+      .on 'mousedown', (evStart) =>
         if @instance.isDisabled() then return
-        if event.which != 1 then return  # only left mouse btn
-        e.stopPropagation()
+        if evStart.which != 1 then return  # only left mouse btn
+        evStart.stopPropagation()
 
         @area.css({'z-index': 1000})
-        offset_x = e.pageX - @area.offset().left
-        offset_y = e.pageY - @area.offset().top
+        currentBox = getBoxCSS(@area)
 
         @area
-          .on 'mousemove', (e) =>
-            e.preventDefault()
+          .on 'mousemove', (evEnd) =>
+            evEnd.preventDefault()
 
-            new_x = e.pageX - @instance.container.offset().left - offset_x
-            new_y = e.pageY - @instance.container.offset().top - offset_y
-            # respect parent
-            if new_x + @area.width() >= @instance.container.width() - 1 or
-                new_y + @area.height() >= @instance.container.height() - 1 or
-                new_x < 0 or new_y < 0
+            # calulate movement
+            diffX = evEnd.pageX - evStart.pageX
+            diffY = evEnd.pageY - evStart.pageY
+            [left, top, width, height] = callback(diffX, diffY)
+
+            # apply movement
+            box =
+              left: currentBox.left + left
+              top: currentBox.top + top
+              width: currentBox.width + width
+              height: currentBox.height + height
+
+            # respect min size
+            if box.width < @instance.options.min_width or
+                box.height < @instance.options.min_height
               return
 
-            @area.css {
-              'left': new_x
-              'top': new_y
-            }
+            # respect parent
+            if box.left + box.width >= @instance.container.width() - 1 or
+                box.top + box.height >= @instance.container.height() - 1 or
+                box.left < 0 or box.top < 0
+              return
+
+            @area.css(box)
             return
 
       .on 'mouseup', (e) =>
@@ -73,11 +83,46 @@ class Area
 
         @area.css({'z-index': 10})
         @area.off 'mousemove'
-        @_trigger_event('moved')
+        @_trigger_event(event)
         return
-    @area
-      .addClass('area-draggable')
-      .append(dragger)
+
+  _make_draggable: ->
+    @area.addClass('area-draggable')
+    @_get_handle('drag-handle', 'moved', (diffX, diffY) ->
+      return [diffX, diffY, 0, 0]
+    ).appendTo(@area)
+    return
+
+  _make_resizeable: ->
+    @area.addClass('area-resizeable')
+
+    # add edge handles
+    @_get_handle('resize-handle left', 'resized', (diffX, diffY) ->
+      return [diffX, 0, -diffX, 0]
+    ).appendTo(@area)
+    @_get_handle('resize-handle right', 'resized', (diffX, diffY) ->
+      return [0, 0, diffX, 0]
+    ).appendTo(@area)
+    @_get_handle('resize-handle top', 'resized', (diffX, diffY) ->
+      return [0, diffY, 0, -diffY]
+    ).appendTo(@area)
+    @_get_handle('resize-handle bottom', 'resized', (diffX, diffY) ->
+      return [0, 0, 0, diffY]
+    ).appendTo(@area)
+
+    # add corner handles
+    @_get_handle('resize-handle topleft', 'resized', (diffX, diffY) ->
+      return [diffX, diffY, -diffX, -diffY]
+    ).appendTo(@area)
+    @_get_handle('resize-handle topright', 'resized', (diffX, diffY) ->
+      return [0, diffY, diffX, -diffY]
+    ).appendTo(@area)
+    @_get_handle('resize-handle bottomleft', 'resized', (diffX, diffY) ->
+      return [diffX, 0, -diffX, diffY]
+    ).appendTo(@area)
+    @_get_handle('resize-handle bottomright', 'resized', (diffX, diffY) ->
+      return [0, 0, diffX, diffY]
+    ).appendTo(@area)
     return
 
   getID: ->
@@ -88,6 +133,9 @@ class Area
 
   isDraggable: ->
     return @draggable
+
+  isResizable: ->
+    return @resizable
 
   destroy: ->
     @area.remove()
@@ -157,7 +205,8 @@ class SelectAreas
 
         size = getBoxCSS(@selection)
         if size.width != 0 and size.height != 0
-          @areas.push new Area(@, size, @options.draggable, @options.label)
+          @areas.push new Area(@, size, @options.draggable,
+                               @options.resizeable, @options.label)
           @__labelVisibility()
 
         # cleanup

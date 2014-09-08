@@ -50,6 +50,9 @@ $(document).ready(function() {
   $elem.on('area-moved', function(ev, data){
     $events.prepend('area-moved: ' + data.id + '<br>');
   });
+  $elem.on('area-resized', function(ev, data){
+    $events.prepend('area-resized: ' + data.id + '<br>');
+  });
   $elem.on('area-removed', function(ev, id){
     $events.prepend('area-removed: ' + id + '<br>');
   });
