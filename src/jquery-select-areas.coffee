@@ -17,9 +17,11 @@ defaults = {
 
 class Area
   @amount: 0
-  constructor: (@instance, size,
+  constructor: (@instance, size, @id=Area.amount++,
                 @draggable=true, @resizeable=true, label=true) ->
-    @id = Area.amount++
+    if (@id > Area.amount)
+      Area.amount = @id + 1
+
     @area = $('<div>').addClass('area').css(size)
     if label
       @area.append($('<p>').addClass('name').addClass('no-select').text(@id))
@@ -205,7 +207,7 @@ class SelectAreas
 
         size = getBoxCSS(@selection)
         if size.width != 0 and size.height != 0
-          @areas.push new Area(@, size, @options.draggable,
+          @areas.push new Area(@, size, null, @options.draggable,
                                @options.resizeable, @options.label)
           @__labelVisibility()
 
@@ -243,6 +245,14 @@ class SelectAreas
     for area in toBeRemoved
       area.destroy()
       @elem.trigger('area-removed', id)
+
+  addArea: (id, size) ->
+    if (size.left > 0 and size.left <= @container.width() and
+        size.top > 0 and size.top <= @container.height() and
+        size.width > 0 and size.height > 0)
+      @areas.push new Area(@, size, id, @options.draggable,
+                           @options.resizeable, @options.label)
+      @__labelVisibility()
 
   getAreas: ->
     a = {}
