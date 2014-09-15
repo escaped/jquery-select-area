@@ -161,7 +161,7 @@ class SelectAreas
     @container
       .on 'mousedown', (e) =>
         if @isDisabled() then return
-        if event.which != 1 then return  # only left mouse btn
+        if e.which != 1 then return  # only left mouse btn
         if @selection
           @container.trigger 'mouseup'
 
